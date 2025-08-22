@@ -9,6 +9,7 @@ public class Movement : MonoBehaviour
     [Header("Variáveis")]
     [SerializeField] Vector2 friction = new Vector2(-.1f, 0f);
     [SerializeField] Rigidbody2D Rb;
+    [SerializeField] HeathBase heathBase;
 
     [Header("Speed setup")]
     [SerializeField] float speed;
@@ -18,12 +19,29 @@ public class Movement : MonoBehaviour
     [SerializeField] float jumpForce = 10f; // 15f ideal
     private bool ISJUMPING = false;
 
+    [Header("Animator and animation")]
+    [SerializeField] Animator animator;
+    [SerializeField] string boolRun = "Run";
+    [SerializeField] string boolJumping = "Jumping";
+    [SerializeField] string boolFalling = "Falling";
+    //[SerializeField] string boolLanding = "Landing";
+
+
     [Header("Animation jumping setup")]
     [SerializeField] float jumpingScaleX = 0.8f; // 0.9f ideal
     [SerializeField] float jumpingScaleY = 1.2f; // 1.2f ideal
     [SerializeField] float animationJumpingDuration = 0.3f;
 
     [SerializeField] Ease ease = Ease.OutBack;
+
+    private void Start()
+    {
+        if(Rb == null || heathBase == null)
+        {
+            Rb = GetComponent<Rigidbody2D>();
+            heathBase = GetComponent<HeathBase>();
+        }
+    }
 
     #region Métodos 
     /// <summary>
@@ -54,25 +72,48 @@ public class Movement : MonoBehaviour
     /// <returns> sem retorno, mas altera o movimento do player</returns>
     public void HandleMovement()
     {
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (heathBase.getDead() == false)
         {
-            currentSpeed = speedRun;
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                currentSpeed = speedRun;
+                animator.speed = 2f;
+            }
+            else
+            {
+                currentSpeed = speed;
+                animator.speed = 1f;
+            }
+
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                Rb.velocity = new Vector2(currentSpeed, Rb.velocity.y);
+                if(Rb.transform.localScale.x != 1)
+                {
+                    Rb.transform.DOScaleX(1, .1f);
+                }
+                animator.SetBool(boolRun, true);
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                Rb.velocity = new Vector2(-currentSpeed, Rb.velocity.y);
+                if(Rb.transform.localScale.x != -1)
+                {
+                    Rb.transform.DOScaleX(-1, .1f);
+                }
+                animator.SetBool(boolRun, true);
+            }
+            else
+            {
+                animator.SetBool(boolRun, false);
+            }
+
+            Rb.velocity += friction * (Rb.velocity.x > 0 ? 1 : -1);
         }
         else
         {
-            currentSpeed = speed;
+            return;
         }
-
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            Rb.velocity = new Vector2(currentSpeed, Rb.velocity.y);
-        }
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            Rb.velocity = new Vector2(-currentSpeed, Rb.velocity.y);
-        }
-
-        Rb.velocity += friction * (Rb.velocity.x > 0 ? 1 : -1);
     }
 
     /// <summary>
@@ -91,15 +132,23 @@ public class Movement : MonoBehaviour
     #endregion
 
     #region Metodos de Animação
+    public void SetAnimationFalses()
+    {
+        animator.SetBool(boolJumping, false);
+        animator.SetBool(boolFalling, false);
+    }
+
     /// <summary>
     /// Animação de pulo
     /// </summary>
     /// <returns> sem retorno, mas distorce o corpo quando pula e volta fazendo animação de yoyo </returns>
     public void HandleScaleJump()
     {
+        animator.SetBool(boolJumping, true);
         DOTween.Complete(Rb.transform);
         Rb.transform.DOScaleX(jumpingScaleX, animationJumpingDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
         Rb.transform.DOScaleY(jumpingScaleY, animationJumpingDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
+        animator.SetBool(boolFalling, true);
     }
 
     #endregion

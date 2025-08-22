@@ -7,6 +7,7 @@ TagManager:
   - floor
   - spike
   - enemy
+  - sprite
   layers:
   - Default
   - TransparentFX

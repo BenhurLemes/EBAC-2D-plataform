@@ -10,12 +10,15 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("floor")){
+            movement.SetAnimationFalses();
             movement.SetJumping();
+            Debug.Log("Landed on: " + collision.transform.name);
         }
 
         if (collision.gameObject.CompareTag("spike"))
         {
-            heath.Damage(2);
+            heath.Damage(1000);
+            Debug.Log(collision.transform.name);
         }
     }
 
