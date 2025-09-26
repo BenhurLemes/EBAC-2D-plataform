@@ -944,8 +944,8 @@ MonoBehaviour:
   playerPrefab: {fileID: 8835229685202505509, guid: 00afc9fb4087652419d090da0b825d97,
     type: 3}
   enemiePrefs:
-  - {fileID: 8763598642799732873}
-  - {fileID: 3599279343249421194}
+  - {fileID: 0}
+  - {fileID: 0}
   StartPoint: {fileID: 1620148278}
   duration: 0.2
   delay: 0.05
@@ -4199,7 +4199,7 @@ PrefabInstance:
     - target: {fileID: 8007466312498025151, guid: 00afc9fb4087652419d090da0b825d97,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -186.10965
+      value: -224.3
       objectReference: {fileID: 0}
     - target: {fileID: 8007466312498025151, guid: 00afc9fb4087652419d090da0b825d97,
         type: 3}
@@ -4254,7 +4254,7 @@ PrefabInstance:
     - target: {fileID: 8835229685202505509, guid: 00afc9fb4087652419d090da0b825d97,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

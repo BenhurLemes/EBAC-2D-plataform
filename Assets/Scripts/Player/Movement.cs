@@ -6,34 +6,38 @@ using DG.Tweening;
 
 public class Movement : MonoBehaviour
 {
-    [Header("Variáveis")]
+    [Header("Variáveis privadas")]
     [SerializeField] Vector2 friction = new Vector2(-.1f, 0f);
     [SerializeField] Rigidbody2D Rb;
     [SerializeField] HeathBase heathBase;
 
-    [Header("Speed setup")]
+    //--------------------------//
+
+    [Header("Variáveis Speed setup")]
     [SerializeField] float speed;
     [SerializeField] float speedRun;
     private float currentSpeed;
-
     [SerializeField] float jumpForce = 10f; // 15f ideal
     private bool ISJUMPING = false;
 
-    [Header("Animator and animation")]
+    //--------------------------//
+
+    [Header("Variáveis Animator and animation")]
     [SerializeField] Animator animator;
     [SerializeField] string boolRun = "Run";
     [SerializeField] string boolJumping = "Jumping";
     [SerializeField] string boolFalling = "Falling";
     //[SerializeField] string boolLanding = "Landing";
 
+    //--------------------------//
 
-    [Header("Animation jumping setup")]
+    [Header("Variáveis Animação do pulo setup")]
     [SerializeField] float jumpingScaleX = 0.8f; // 0.9f ideal
     [SerializeField] float jumpingScaleY = 1.2f; // 1.2f ideal
     [SerializeField] float animationJumpingDuration = 0.3f;
-
     [SerializeField] Ease ease = Ease.OutBack;
 
+    #region UNITY METHODS
     private void Start()
     {
         if(Rb == null || heathBase == null)
@@ -42,30 +46,9 @@ public class Movement : MonoBehaviour
             heathBase = GetComponent<HeathBase>();
         }
     }
+    #endregion
 
-    #region Métodos 
-    /// <summary>
-    /// getter Speed
-    /// </summary>
-    /// <returns> retorna a sua atual velocidaed
-    /// </returns>
-    public float getSpeed()
-    {
-        return currentSpeed;
-    }
-
-    /// <summary>
-    /// setter de Jumping
-    /// </summary>
-    /// <returns> sem retorno, apenas altera o valor do ISJUMPING para falso e reseta o 
-    /// transform do objeto para a forma padrão
-    /// </returns>
-    public void SetJumping()
-    {
-        ISJUMPING = false;
-        Rb.transform.localScale = Vector2.one;
-    }
-
+    #region METHODS PRIVATES
     /// <summary>
     /// movimento plataforma com dash
     /// </summary>
@@ -74,7 +57,7 @@ public class Movement : MonoBehaviour
     {
         if (heathBase.getDead() == false)
         {
-            if (Input.GetKey(KeyCode.LeftControl))
+            if (Input.GetKey(KeyCode.LeftControl) && !ISJUMPING)
             {
                 currentSpeed = speedRun;
                 animator.speed = 2f;
@@ -131,7 +114,32 @@ public class Movement : MonoBehaviour
     }
     #endregion
 
-    #region Metodos de Animação
+    #region GETTERS AND SETTERS
+    /// <summary>
+    /// getter Speed
+    /// </summary>
+    /// <returns> retorna a sua atual velocidaed
+    /// </returns>
+    public float getSpeed()
+    {
+        return currentSpeed;
+    }
+
+    /// <summary>
+    /// setter de Jumping
+    /// </summary>
+    /// <returns> sem retorno, apenas altera o valor do ISJUMPING para falso e reseta o 
+    /// transform do objeto para a forma padrão
+    /// </returns>
+    public void SetJumping()
+    {
+        ISJUMPING = false;
+        Rb.transform.localScale = Vector2.one;
+    }
+
+    #endregion
+
+    #region ANIMATION METHODS
     public void SetAnimationFalses()
     {
         animator.SetBool(boolJumping, false);

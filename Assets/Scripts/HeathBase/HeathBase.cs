@@ -4,24 +4,35 @@ using UnityEngine;
 
 public class HeathBase : MonoBehaviour
 {
-    [Header("Variáveis padrão")]
+    [Header("Variáveis privadas")]
     [SerializeField] int life;
     [SerializeField] int _currentlife;
     private bool _isDead = false;
-    [SerializeField] float delayKill = 1.5f;
+
+    //--------------------------//
 
     [Header("Variáveis Animação")]
     [SerializeField] Animator animator;
-    [SerializeField] string triggerToPlay = "Death";
+    [SerializeField] string triggerToAnimationDeath = "Death";
+    [SerializeField] float delayKill = 1.5f;
 
-    #region unity methods
+    //--------------------------//
+
+    [Header("Variáveis Classes")]
+    [SerializeField] FlashColor _flashcolor;
+
+    #region UNITY METHODS
     private void Awake()
     {
         init();
+        if (_flashcolor == null)
+        {
+            _flashcolor = gameObject.GetComponent<FlashColor>();
+        }
     }
     #endregion
 
-    #region private methods
+    #region PRIVATE METHODS
 
     private void init()
     {
@@ -32,7 +43,7 @@ public class HeathBase : MonoBehaviour
     private void Kill()
     {
         _isDead = true;
-        animator.SetBool(triggerToPlay, true);
+        animator.SetBool(triggerToAnimationDeath, true);
         Destroy(gameObject, delayKill);
     }
 
@@ -50,9 +61,14 @@ public class HeathBase : MonoBehaviour
                 Kill();
             }
         }
+        if(_flashcolor != null)
+        {
+            _flashcolor.Flash();
+        }
     }
     #endregion
-    #region getters and setters
+
+    #region GETTERS AND SETTERS
     public bool getDead()
     {
         return _isDead;
